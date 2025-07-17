@@ -22,131 +22,128 @@ class OdooMCPServer:
         self.server = Server("odoo-mcp-server")
         self.odoo_client = None
         self.connection_params = None
-        self.setup_tools()
         self.setup_handlers()
-    
-    def setup_tools(self):
-        """Define available MCP tools for Odoo operations"""
-        tools = [
-            Tool(
-                name="odoo_connect",
-                description="Connect to Odoo instance",
-                inputSchema={
-                    "type": "object",
-                    "properties": {
-                        "url": {"type": "string", "description": "Odoo server URL"},
-                        "database": {"type": "string", "description": "Database name"},
-                        "username": {"type": "string", "description": "Username"},
-                        "password": {"type": "string", "description": "Password"}
-                    },
-                    "required": ["url", "database", "username", "password"]
-                }
-            ),
-            Tool(
-                name="odoo_search",
-                description="Search records in Odoo model",
-                inputSchema={
-                    "type": "object",
-                    "properties": {
-                        "model": {"type": "string", "description": "Odoo model name"},
-                        "domain": {"type": "array", "description": "Search domain"},
-                        "fields": {"type": "array", "description": "Fields to retrieve"},
-                        "limit": {"type": "integer", "description": "Maximum records"}
-                    },
-                    "required": ["model"]
-                }
-            ),
-            Tool(
-                name="odoo_create",
-                description="Create new record in Odoo",
-                inputSchema={
-                    "type": "object",
-                    "properties": {
-                        "model": {"type": "string", "description": "Odoo model name"},
-                        "values": {"type": "object", "description": "Record values"}
-                    },
-                    "required": ["model", "values"]
-                }
-            ),
-            Tool(
-                name="odoo_write",
-                description="Update existing records in Odoo",
-                inputSchema={
-                    "type": "object",
-                    "properties": {
-                        "model": {"type": "string", "description": "Odoo model name"},
-                        "ids": {"type": "array", "description": "Record IDs to update"},
-                        "values": {"type": "object", "description": "Values to update"}
-                    },
-                    "required": ["model", "ids", "values"]
-                }
-            ),
-            Tool(
-                name="odoo_unlink",
-                description="Delete records from Odoo",
-                inputSchema={
-                    "type": "object",
-                    "properties": {
-                        "model": {"type": "string", "description": "Odoo model name"},
-                        "ids": {"type": "array", "description": "Record IDs to delete"}
-                    },
-                    "required": ["model", "ids"]
-                }
-            ),
-            Tool(
-                name="odoo_call",
-                description="Call method on Odoo model",
-                inputSchema={
-                    "type": "object",
-                    "properties": {
-                        "model": {"type": "string", "description": "Odoo model name"},
-                        "method": {"type": "string", "description": "Method name"},
-                        "args": {"type": "array", "description": "Method arguments"},
-                        "kwargs": {"type": "object", "description": "Method keyword arguments"}
-                    },
-                    "required": ["model", "method"]
-                }
-            ),
-            Tool(
-                name="odoo_get_models",
-                description="Get list of available Odoo models",
-                inputSchema={
-                    "type": "object",
-                    "properties": {
-                        "filter": {"type": "string", "description": "Filter models by name pattern"}
-                    }
-                }
-            ),
-            Tool(
-                name="odoo_get_fields",
-                description="Get fields information for an Odoo model",
-                inputSchema={
-                    "type": "object",
-                    "properties": {
-                        "model": {"type": "string", "description": "Odoo model name"}
-                    },
-                    "required": ["model"]
-                }
-            ),
-            Tool(
-                name="odoo_count",
-                description="Count records in Odoo model",
-                inputSchema={
-                    "type": "object",
-                    "properties": {
-                        "model": {"type": "string", "description": "Odoo model name"},
-                        "domain": {"type": "array", "description": "Search domain"}
-                    },
-                    "required": ["model"]
-                }
-            )
-        ]
-        
-        for tool in tools:
-            self.server.list_tools.append(tool)
     
     def setup_handlers(self):
         """Setup MCP request handlers"""
+        
+        @self.server.list_tools()
+        async def handle_list_tools() -> List[Tool]:
+            """List available tools"""
+            return [
+                Tool(
+                    name="odoo_connect",
+                    description="Connect to Odoo instance",
+                    inputSchema={
+                        "type": "object",
+                        "properties": {
+                            "url": {"type": "string", "description": "Odoo server URL"},
+                            "database": {"type": "string", "description": "Database name"},
+                            "username": {"type": "string", "description": "Username"},
+                            "password": {"type": "string", "description": "Password"}
+                        },
+                        "required": ["url", "database", "username", "password"]
+                    }
+                ),
+                Tool(
+                    name="odoo_search",
+                    description="Search records in Odoo model",
+                    inputSchema={
+                        "type": "object",
+                        "properties": {
+                            "model": {"type": "string", "description": "Odoo model name"},
+                            "domain": {"type": "array", "description": "Search domain"},
+                            "fields": {"type": "array", "description": "Fields to retrieve"},
+                            "limit": {"type": "integer", "description": "Maximum records"}
+                        },
+                        "required": ["model"]
+                    }
+                ),
+                Tool(
+                    name="odoo_create",
+                    description="Create new record in Odoo",
+                    inputSchema={
+                        "type": "object",
+                        "properties": {
+                            "model": {"type": "string", "description": "Odoo model name"},
+                            "values": {"type": "object", "description": "Record values"}
+                        },
+                        "required": ["model", "values"]
+                    }
+                ),
+                Tool(
+                    name="odoo_write",
+                    description="Update existing records in Odoo",
+                    inputSchema={
+                        "type": "object",
+                        "properties": {
+                            "model": {"type": "string", "description": "Odoo model name"},
+                            "ids": {"type": "array", "description": "Record IDs to update"},
+                            "values": {"type": "object", "description": "Values to update"}
+                        },
+                        "required": ["model", "ids", "values"]
+                    }
+                ),
+                Tool(
+                    name="odoo_unlink",
+                    description="Delete records from Odoo",
+                    inputSchema={
+                        "type": "object",
+                        "properties": {
+                            "model": {"type": "string", "description": "Odoo model name"},
+                            "ids": {"type": "array", "description": "Record IDs to delete"}
+                        },
+                        "required": ["model", "ids"]
+                    }
+                ),
+                Tool(
+                    name="odoo_call",
+                    description="Call method on Odoo model",
+                    inputSchema={
+                        "type": "object",
+                        "properties": {
+                            "model": {"type": "string", "description": "Odoo model name"},
+                            "method": {"type": "string", "description": "Method name"},
+                            "args": {"type": "array", "description": "Method arguments"},
+                            "kwargs": {"type": "object", "description": "Method keyword arguments"}
+                        },
+                        "required": ["model", "method"]
+                    }
+                ),
+                Tool(
+                    name="odoo_get_models",
+                    description="Get list of available Odoo models",
+                    inputSchema={
+                        "type": "object",
+                        "properties": {
+                            "filter": {"type": "string", "description": "Filter models by name pattern"}
+                        }
+                    }
+                ),
+                Tool(
+                    name="odoo_get_fields",
+                    description="Get fields information for an Odoo model",
+                    inputSchema={
+                        "type": "object",
+                        "properties": {
+                            "model": {"type": "string", "description": "Odoo model name"}
+                        },
+                        "required": ["model"]
+                    }
+                ),
+                Tool(
+                    name="odoo_count",
+                    description="Count records in Odoo model",
+                    inputSchema={
+                        "type": "object",
+                        "properties": {
+                            "model": {"type": "string", "description": "Odoo model name"},
+                            "domain": {"type": "array", "description": "Search domain"}
+                        },
+                        "required": ["model"]
+                    }
+                )
+            ]
         
         @self.server.call_tool()
         async def handle_call_tool(name: str, arguments: Dict[str, Any]) -> List[TextContent]:
