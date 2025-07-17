@@ -10,7 +10,8 @@ ENV PYTHONPATH=/app
 WORKDIR /app
 
 # Cache bust - force rebuild
-ENV CACHE_BUST=2025-01-17
+ENV CACHE_BUST=2025-01-17-v2
+ARG REBUILD_CACHE=1
 
 # Install system dependencies
 RUN apt-get update \
@@ -28,8 +29,14 @@ COPY requirements-docker.txt requirements.txt
 RUN pip install --no-cache-dir --upgrade pip \
     && pip install --no-cache-dir -r requirements.txt
 
+# Clean any potential cached files
+RUN rm -rf /app/odoo_mcp_server 2>/dev/null || true
+
 # Copy application code
 COPY odoo_mcp_server/ ./odoo_mcp_server/
+
+# Ensure no old server.py exists
+RUN rm -f /app/odoo_mcp_server/server.py 2>/dev/null || true
 COPY .env.example .env
 
 # Create non-root user for security
