@@ -9,6 +9,9 @@ ENV PYTHONPATH=/app
 # Set work directory
 WORKDIR /app
 
+# Cache bust - force rebuild
+ENV CACHE_BUST=2025-01-17
+
 # Install system dependencies
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
