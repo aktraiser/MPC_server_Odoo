@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "odoo-mcp-server"
+version = "0.1.0"
+description = "MCP Server for Odoo integration"
+authors = [{name = "Developer", email = "dev@example.com"}]
+dependencies = [
+    "mcp>=1.0.0",
+    "xmlrpc-client>=1.0.0",
+    "requests>=2.31.0",
+    "python-dotenv>=1.0.0"
+]
+requires-python = ">=3.8"
+
+[project.scripts]
+odoo-mcp-server = "odoo_mcp_server.server:main"
