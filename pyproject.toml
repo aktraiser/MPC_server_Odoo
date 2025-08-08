@@ -1,0 +1,21 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "odoo-mcp-server"
+version = "0.1.0"
+description = "MCP Server for Odoo integration"
+authors = [{name = "Developer", email = "dev@example.com"}]
+dependencies = [
+    "mcp>=1.0.0",
+    "requests>=2.31.0",
+    "python-dotenv>=1.0.0",
+    "fastapi>=0.104.0",
+    "uvicorn[standard]>=0.24.0",
+    "pydantic>=2.0.0"
+]
+requires-python = ">=3.8"
+
+[project.scripts]
+# Optionnel: ajouter un entrypoint valide plus tard si nécessaire

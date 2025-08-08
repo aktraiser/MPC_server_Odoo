@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: odoo-mcp-server
+    env: docker
+    dockerfilePath: ./Dockerfile
+    envVars:
+      - key: ODOO_URL
+        sync: false
+      - key: ODOO_DATABASE
+        sync: false
+      - key: ODOO_USERNAME
+        sync: false
+      - key: ODOO_PASSWORD
+        sync: false
+      - key: PORT
+        value: 8000
